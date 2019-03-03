@@ -1,0 +1,29 @@
+{
+  "name": "adonis-json-api",
+  "version": "1.0.0",
+  "description": "The service provider for Adonis wrapping jsonapi specification",
+  "keywords": [
+    "adonis",
+    "json",
+    "api",
+    "jsonapi",
+    "provider",
+    "serializer"
+  ],
+  "bugs": "https://github.com/marceloadsj/adonis-json-api/issues",
+  "license": "MIT",
+  "author": {
+    "name": "Marcelo Junior",
+    "url": "https://github.com/marceloadsj",
+    "email": "marceloadsj1@gmail.com"
+  },
+  "main": "service/JsonApiService.js",
+  "repository": "https://github.com/marceloadsj/adonis-json-api",
+  "dependencies": {
+    "@adonisjs/generic-exceptions": "^3.0.1",
+    "json-api-serializer": "^1.14.1"
+  },
+  "peerDependencies": {
+    "@adonisjs/fold": "^4.0.9"
+  }
+}
