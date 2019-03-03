@@ -20,10 +20,11 @@
   "main": "service/JsonApiService.js",
   "repository": "https://github.com/marceloadsj/adonis-json-api",
   "dependencies": {
-    "@adonisjs/generic-exceptions": "^3.0.1",
     "json-api-serializer": "^1.14.1"
   },
   "peerDependencies": {
-    "@adonisjs/fold": "^4.0.9"
+    "@adonisjs/fold": "^4.0.9",
+    "@adonisjs/generic-exceptions": "^3.0.1",
+    "@adonisjs/lucid": "^6.1.3"
   }
 }

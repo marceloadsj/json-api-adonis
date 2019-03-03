@@ -2,14 +2,6 @@
 # yarn lockfile v1
 
 
-"@adonisjs/generic-exceptions@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@adonisjs/generic-exceptions/-/generic-exceptions-3.0.1.tgz#57c55a912d72911c614f528a32a4b399feaf6a99"
-  integrity sha512-AHBSvgKj17cQYkj7QL7la8KCB6WeBQPyHlgzX9nimLPY9ViWWmwozuy2skEjsh7+XNIg8vQdZphJyoIf8QzzCQ==
-  dependencies:
-    node-exceptions "^4.0.1"
-    upcast "^4.0.0"
-
 any-promise@^1.1.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/any-promise/-/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"
@@ -19,11 +11,6 @@ core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
-
-esm@^3.0.84:
-  version "3.2.9"
-  resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.9.tgz#9dca653e3b39f89c3c65c5e84cebfa4af345c10d"
-  integrity sha512-mATFs9dpCjnEyNv27z29UNDmJmBBX8zMdcFip7aIOrBRTpLs8SA+6Ek1QtsWfvecAJVeZy+X5D3Z6xZVtUvYdg==
 
 from2@^2.1.1:
   version "2.3.0"
@@ -93,11 +80,6 @@ lodash@^4.5.1:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
-
-node-exceptions@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/node-exceptions/-/node-exceptions-4.0.1.tgz#70425d17a245c3c00709c72f57c4c20b39ef1a4c"
-  integrity sha512-KJI+FawYOv74x60H6+zrBPfO2vvp9m0pHZi6SH8BBBuc67Irv11DsqY4Le4EBFq1/T5aXFU3hkLrMgtW7RNXxA==
 
 p-is-promise@^1.1.0:
   version "1.1.0"
@@ -176,13 +158,6 @@ unique-stream@^2.2.1:
   dependencies:
     json-stable-stringify-without-jsonify "^1.0.1"
     through2-filter "^3.0.0"
-
-upcast@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/upcast/-/upcast-4.0.0.tgz#30c8397a8805be1f40b176f253c78f0f53d108f6"
-  integrity sha512-LS0LmQtEPyyM3Zk4Bb7dNpDVha0xD4Z/Ne3zAqal0hCU/nYjoYU7qic2MPKB+Lu+3h5vKSe2iVqvYnZjmLrAyQ==
-  dependencies:
-    esm "^3.0.84"
 
 util-deprecate@~1.0.1:
   version "1.0.2"
