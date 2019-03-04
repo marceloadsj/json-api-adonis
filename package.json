@@ -1,6 +1,6 @@
 {
   "name": "json-api-adonis",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "The service provider for Adonis wrapping jsonapi specification",
   "keywords": [
     "adonis",
@@ -20,11 +20,11 @@
   "main": "service/JsonApiService.js",
   "repository": "https://github.com/marceloadsj/json-api-adonis",
   "dependencies": {
+    "@adonisjs/generic-exceptions": "^3.0.1",
     "json-api-serializer": "^1.14.1"
   },
   "peerDependencies": {
     "@adonisjs/fold": "^4.0.9",
-    "@adonisjs/generic-exceptions": "^3.0.1",
     "@adonisjs/lucid": "^6.1.3"
   }
 }

@@ -4,7 +4,7 @@ async function makeConfigFile(cli) {
   try {
     await cli.makeConfig(
       "jsonapi.js",
-      path.join(__dirname, "./templates/auth.mustache"),
+      path.join(__dirname, "./templates/jsonapi.mustache"),
       {}
     );
 
