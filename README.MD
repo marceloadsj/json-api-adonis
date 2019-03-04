@@ -2,6 +2,9 @@
 
 Wrapper between [json-api-serializer](https://www.npmjs.com/package/json-api-serializer) and [Adonis](https://adonisjs.com/)!
 
+[![NPM](https://img.shields.io/npm/v/json-api-adonis.svg)](https://www.npmjs.com/package/json-api-adonis)
+[![Build Status](https://travis-ci.org/marceloadsj/json-api-adonis.svg?branch=master)](https://travis-ci.org/marceloadsj/json-api-adonis)
+
 ---
 
 ## How to Use
