@@ -1,5 +1,6 @@
 "use strict";
 
+const MissingConfigFileException = require("../exceptions/MissingConfigFileException");
 const UnsupportedMediaTypeException = require("../exceptions/UnsupportedMediaTypeException");
 const NotAcceptableException = require("../exceptions/NotAcceptableException");
 
@@ -10,6 +11,10 @@ const contentType = "application/vnd.api+json";
 class JsonApiMiddleware {
   constructor({ Config }) {
     this.config = Config.get("jsonapi");
+
+    if (!this.config) {
+      throw MissingConfigFileException.invoke();
+    }
   }
 
   async handle({ request, response }, next) {
@@ -34,7 +39,7 @@ class JsonApiMiddleware {
       }
     }
 
-    if (request.hasBody() && this.config.deserializeBody !== false) {
+    if (request.hasBody() && this.config.deserializeBody) {
       const data = request.input("data");
 
       if (data) {

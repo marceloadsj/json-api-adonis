@@ -2,11 +2,18 @@
 
 const JsonApiSerializer = require("json-api-serializer");
 
+const MissingConfigFileException = require("../exceptions/MissingConfigFileException");
+const TypeNotFoundException = require("../exceptions/TypeNotFoundException");
+
 class JsonApiService {
   constructor({ Config, Logger }) {
     this.Logger = Logger;
 
     this.config = Config.get("jsonapi");
+
+    if (!this.config) {
+      throw MissingConfigFileException.invoke();
+    }
 
     this.jsonApiSerializer = new JsonApiSerializer(this.config.options);
 
@@ -31,10 +38,9 @@ class JsonApiService {
 
         return false;
       });
-    } else {
-      this.Logger.warning(`The type ${name} was not found`);
-      return;
     }
+
+    if (!type) throw TypeNotFoundException.invoke(name);
 
     return type;
   }
