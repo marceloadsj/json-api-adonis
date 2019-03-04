@@ -1,5 +1,9 @@
 const { ServiceProvider } = require("@adonisjs/fold");
 
+const defaultConfig = {
+  deserializeBody: true
+};
+
 class JsonApiProvider extends ServiceProvider {
   _registerJsonApiService() {
     this.app.singleton("json-api-adonis/services/JsonApiService", () => {
@@ -46,6 +50,9 @@ class JsonApiProvider extends ServiceProvider {
   }
 
   boot() {
+    const Config = this.app.use("Adonis/Src/Config");
+    Config.merge("jsonapi", defaultConfig);
+
     const Context = this.app.use("Adonis/Src/HttpContext");
     const RequestService = this.app.use(
       "json-api-adonis/services/RequestService"
