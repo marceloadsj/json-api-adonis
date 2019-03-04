@@ -54,7 +54,9 @@ class JsonApiProvider extends ServiceProvider {
 
     Context.getter(
       "jsonapi",
-      () => new RequestService({ Config, request: this.request }),
+      function() {
+        return new RequestService({ Config, request: this.request });
+      },
       true
     );
   }
