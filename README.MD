@@ -1,80 +1,33 @@
-# 🐙 Adonis Json Api
+# 🐙 [Adonis Json Api](https://www.npmjs.com/package/adonis-json-api)
 
 Wrapper between [json-api-serializer](https://www.npmjs.com/package/json-api-serializer) and [Adonis](https://adonisjs.com/)!
 
 ---
 
-## How to use
+## How to Use
 
-**Install:**
-`yarn add marceloadsj/adonis-json-api`
+**Install (better with [_@adonisjs/cli_](https://github.com/adonisjs/adonis-cli)):**
 
-_I will soon publish it to npm_
+With NPM: `adonis install adonis-json-api`
+With Yarn: `adonis install adonis-json-api --yarn`
 
-**Create config/jsonapi.js file with:**
+Or without [_@adonisjs/cli_](https://github.com/adonisjs/adonis-cli), but remember **config/jsonapi.js** need to be created by hand:
 
-```
-module.exports = {
-  options: { /* the global/common options */ },
-  types: {
-    [typeName]: {
-      model: 'App/Models/[ModelName]',
-      options: { /* the specific type/model options */ }
-    }
-  }
-}
-```
+With NPM: `npm install adonis-json-api --save`
+With YARN: `yarn add adonis-json-api`
 
-**Add service provider in start/app.js:**
+##### Then please, check the [instructions.md](instructions.md) file!
 
-```
-const providers = [
-    // ...
-    'adonis-json-api/providers/JsonApiProvider'
-]
-```
-
-**Add global middleware:**
-
-```
-const globalMiddleware = [
-    // ...
-    'adonis-json-api/middlewares/JsonApiMiddleware'
-]
-```
-
-**Add serializer in your models:**
-
-```
-static get Serializer() {
-    return 'adonis-json-api/serializers/JsonApiSerializer'
-}
-```
+&nbsp;
 
 ---
 
-## Options:
+### MIT License
 
-All the options are based on the [json-api-serializer](https://www.npmjs.com/package/json-api-serializer) configurations.
+Copyright 2019 [marceloadsj](https://github.com/marceloadsj)
 
----
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-### Middleware:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-The middleware will do the [Content Negotiation](https://jsonapi.org/format/#content-negotiation) in all client requests, throwing errors when something is wrong.
-
----
-
-### Service:
-
-You can import and use the Service with:
-
-`const JsonApiService = use('adonis-json-api/services/JsonApiService')`
-or the alias
-`const JsonApiService = use('JsonApiService')`
-
-The service has some helper methods you can use like:
-
-| Method | Params | Description |
-| ------ | ------ | ----------- |
-
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
