@@ -1,6 +1,6 @@
 {
   "name": "adonis-json-api",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "The service provider for Adonis wrapping jsonapi specification",
   "keywords": [
     "adonis",
