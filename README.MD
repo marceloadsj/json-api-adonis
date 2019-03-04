@@ -12,13 +12,14 @@ With NPM: `adonis install json-api-adonis`
 
 With Yarn: `adonis install json-api-adonis --yarn`
 
+&nbsp;
 Or without [_@adonisjs/cli_](https://github.com/adonisjs/adonis-cli), but remember **config/jsonapi.js** need to be created by hand:
 
 With NPM: `npm install json-api-adonis --save`
 
 With Yarn: `yarn add json-api-adonis`
 
-##### Then please, check the [instructions.md](instructions.md) file!
+#### Then please, check the [instructions.md](instructions.md) file!
 
 &nbsp;
 

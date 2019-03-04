@@ -19,6 +19,7 @@ module.exports = {
 };
 ```
 
+&nbsp;
 **Add json api service provider in start/app.js:**
 
 ```
@@ -28,6 +29,7 @@ const providers = [
 ]
 ```
 
+&nbsp;
 **Add json api global middleware:**
 
 ```
@@ -37,6 +39,7 @@ const globalMiddleware = [
 ]
 ```
 
+&nbsp;
 **Add json api serializer in your models:**
 
 ```
@@ -68,14 +71,14 @@ Examples:
 
 ---
 
-### Middlewares:
+## Middlewares:
 
 **Global JsonApiMiddleware**
 The global middleware will do the [Content Negotiation](https://jsonapi.org/format/#content-negotiation) in all client requests, throwing errors when something is wrong. This middleware also put the right Content-Type header in responses.
 
 ---
 
-### Services:
+## Services:
 
 You can import and use the JsonApiService with:
 
