@@ -96,9 +96,14 @@ async myEndpoint({ jsonapi }) {
 }
 ```
 
-The methods are scoped in meta key:
+The methods are scoped in meta and attributes key:
 
 - **allMeta**: works like request.all();
 - **onlyMeta**: works like request.only();
 - **exceptMeta**: works like request.except();
 - **inputMeta**: works like request.input();
+
+- **allAttributes**: works like request.all();
+- **onlyAttributes**: works like request.only();
+- **exceptAttributes**: works like request.except();
+- **inputAttribute**: works like request.input();
