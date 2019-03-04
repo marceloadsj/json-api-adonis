@@ -3,9 +3,15 @@
 const UnsupportedMediaTypeException = require("../exceptions/UnsupportedMediaTypeException");
 const NotAcceptableException = require("../exceptions/NotAcceptableException");
 
+const JsonApiService = use("JsonApiService");
+
 const contentType = "application/vnd.api+json";
 
 class JsonApiMiddleware {
+  constructor({ Config }) {
+    this.config = Config.get("jsonapi");
+  }
+
   async handle({ request, response }, next) {
     const requestContentType = request.header("Content-Type").trim();
 
@@ -25,6 +31,14 @@ class JsonApiMiddleware {
 
       if (!isAcceptValid) {
         throw NotAcceptableException.invoke(contentType);
+      }
+    }
+
+    if (request.hasBody() && this.config.deserializeBody !== false) {
+      const data = request.input("data");
+
+      if (data) {
+        request.body = JsonApiService.deserialize(data.type, request.body);
       }
     }
 

@@ -46,6 +46,10 @@ class JsonApiService {
   serializeError(error) {
     return this.jsonApiSerializer.serializeError(error);
   }
+
+  deserialize(type, data) {
+    return this.jsonApiSerializer.deserialize(type, data);
+  }
 }
 
 module.exports = JsonApiService;
