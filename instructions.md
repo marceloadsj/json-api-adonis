@@ -1,4 +1,4 @@
-# 🐙 Adonis Json Api - How to Use
+# 🐙 Json Api Adonis - How to Use
 
 &nbsp;
 **Create config/jsonapi.js file with:**
@@ -24,7 +24,7 @@ module.exports = {
 ```
 const providers = [
     // ...
-    'adonis-json-api/providers/JsonApiProvider'
+    'json-api-adonis/providers/JsonApiProvider'
 ]
 ```
 
@@ -33,7 +33,7 @@ const providers = [
 ```
 const globalMiddleware = [
     // ...
-    'adonis-json-api/middlewares/JsonApiMiddleware'
+    'json-api-adonis/middlewares/JsonApiMiddleware'
 ]
 ```
 
@@ -41,7 +41,7 @@ const globalMiddleware = [
 
 ```
 static get Serializer() {
-    return 'adonis-json-api/serializers/JsonApiSerializer'
+    return 'json-api-adonis/serializers/JsonApiSerializer'
 }
 ```
 
@@ -79,7 +79,7 @@ The global middleware will do the [Content Negotiation](https://jsonapi.org/form
 
 You can import and use the JsonApiService with:
 
-`const JsonApiService = use('adonis-json-api/services/JsonApiService')`
+`const JsonApiService = use('json-api-adonis/services/JsonApiService')`
 
 or the alias
 

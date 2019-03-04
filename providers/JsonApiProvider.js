@@ -2,7 +2,7 @@ const { ServiceProvider } = require("@adonisjs/fold");
 
 class JsonApiProvider extends ServiceProvider {
   _registerJsonApiService() {
-    this.app.singleton("adonis-json-api/services/JsonApiService", () => {
+    this.app.singleton("json-api-adonis/services/JsonApiService", () => {
       const Logger = this.app.use("Adonis/Src/Logger");
       const Config = this.app.use("Adonis/Src/Config");
       const JsonApiService = require("../src/services/JsonApiService");
@@ -10,11 +10,11 @@ class JsonApiProvider extends ServiceProvider {
       return new JsonApiService({ Config, Logger });
     });
 
-    this.app.alias("adonis-json-api/services/JsonApiService", "JsonApiService");
+    this.app.alias("json-api-adonis/services/JsonApiService", "JsonApiService");
   }
 
   _registerRequestService() {
-    this.app.bind("adonis-json-api/services/RequestService", () => {
+    this.app.bind("json-api-adonis/services/RequestService", () => {
       return require("../src/services/RequestService");
     });
   }
@@ -25,7 +25,7 @@ class JsonApiProvider extends ServiceProvider {
   }
 
   _registerMiddlewares() {
-    this.app.bind("adonis-json-api/middlewares/JsonApiMiddleware", () => {
+    this.app.bind("json-api-adonis/middlewares/JsonApiMiddleware", () => {
       const Config = this.app.use("Adonis/Src/Config");
       const JsonApiMiddleware = require("../src/middlewares/JsonApiMiddleware");
 
@@ -34,7 +34,7 @@ class JsonApiProvider extends ServiceProvider {
   }
 
   _registerSerializers() {
-    this.app.bind("adonis-json-api/serializers/JsonApiSerializer", () =>
+    this.app.bind("json-api-adonis/serializers/JsonApiSerializer", () =>
       require("../src/serializers/JsonApiSerializer")
     );
   }
@@ -48,7 +48,7 @@ class JsonApiProvider extends ServiceProvider {
   boot() {
     const Context = this.app.use("Adonis/Src/HttpContext");
     const RequestService = this.app.use(
-      "adonis-json-api/services/RequestService"
+      "json-api-adonis/services/RequestService"
     );
     const Config = this.app.use("Adonis/Src/Config");
 

@@ -1,4 +1,4 @@
-# 🐙 [Adonis Json Api](https://www.npmjs.com/package/adonis-json-api)
+# 🐙 [Json Api Adonis](https://www.npmjs.com/package/json-api-adonis)
 
 Wrapper between [json-api-serializer](https://www.npmjs.com/package/json-api-serializer) and [Adonis](https://adonisjs.com/)!
 
@@ -8,15 +8,15 @@ Wrapper between [json-api-serializer](https://www.npmjs.com/package/json-api-ser
 
 **Install (better with [_@adonisjs/cli_](https://github.com/adonisjs/adonis-cli)):**
 
-With NPM: `adonis install adonis-json-api`
+With NPM: `adonis install json-api-adonis`
 
-With Yarn: `adonis install adonis-json-api --yarn`
+With Yarn: `adonis install json-api-adonis --yarn`
 
 Or without [_@adonisjs/cli_](https://github.com/adonisjs/adonis-cli), but remember **config/jsonapi.js** need to be created by hand:
 
-With NPM: `npm install adonis-json-api --save`
+With NPM: `npm install json-api-adonis --save`
 
-With Yarn: `yarn add adonis-json-api`
+With Yarn: `yarn add json-api-adonis`
 
 ##### Then please, check the [instructions.md](instructions.md) file!
 
