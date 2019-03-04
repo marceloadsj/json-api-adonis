@@ -17,6 +17,9 @@
     "url": "https://github.com/marceloadsj",
     "email": "marceloadsj1@gmail.com"
   },
+  "scripts": {
+    "test": "node japaFile.js"
+  },
   "main": "service/JsonApiService.js",
   "repository": "https://github.com/marceloadsj/json-api-adonis",
   "dependencies": {
@@ -26,5 +29,13 @@
   "peerDependencies": {
     "@adonisjs/fold": "^4.0.9",
     "@adonisjs/lucid": "^6.1.3"
+  },
+  "devDependencies": {
+    "@adonisjs/fold": "^4.0.9",
+    "@adonisjs/framework": "^5.0.13",
+    "@adonisjs/sink": "^1.0.17",
+    "japa": "^2.0.7",
+    "japa-cli": "^1.0.1",
+    "supertest": "^3.4.2"
   }
 }
