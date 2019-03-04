@@ -9,12 +9,14 @@ Wrapper between [json-api-serializer](https://www.npmjs.com/package/json-api-ser
 **Install (better with [_@adonisjs/cli_](https://github.com/adonisjs/adonis-cli)):**
 
 With NPM: `adonis install adonis-json-api`
+
 With Yarn: `adonis install adonis-json-api --yarn`
 
 Or without [_@adonisjs/cli_](https://github.com/adonisjs/adonis-cli), but remember **config/jsonapi.js** need to be created by hand:
 
 With NPM: `npm install adonis-json-api --save`
-With YARN: `yarn add adonis-json-api`
+
+With Yarn: `yarn add adonis-json-api`
 
 ##### Then please, check the [instructions.md](instructions.md) file!
 

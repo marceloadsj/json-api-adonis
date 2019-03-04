@@ -80,10 +80,12 @@ The global middleware will do the [Content Negotiation](https://jsonapi.org/form
 You can import and use the JsonApiService with:
 
 `const JsonApiService = use('adonis-json-api/services/JsonApiService')`
+
 or the alias
+
 `const JsonApiService = use('JsonApiService')`
 
-You also have the jsonapi request helper in the requests like:
+You also have the jsonapi request helper in controllers like:
 
 ```
 async myEndpoint({ jsonapi }) {
