@@ -1,45 +1,75 @@
-const http = require("http");
 const test = require("japa");
-const { Config } = require("@adonisjs/sink");
-const Request = require("@adonisjs/framework/src/Request");
 const supertest = require("supertest");
 
-const helpers = require("./helpers");
-const RequestService = require("../src/services/RequestService");
+const requestServiceHelper = require("./requestServiceHelper");
+
+const serializedObjectBody = {
+  data: {
+    attributes: { name: "Marcelo Junior", gender: "male" },
+    meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+  }
+};
+
+const deserializedObjectBody = {
+  ...serializedObjectBody.data.attributes,
+  meta: serializedObjectBody.data.meta
+};
+
+const objectAttributes = serializedObjectBody.data.attributes;
+
+const objectMeta = serializedObjectBody.data.meta;
+
+const serializedArrayBody = {
+  data: [
+    { ...serializedObjectBody.data },
+    {
+      attributes: { name: "Suellen Siqueira", gender: "female" },
+      meta: { profile: null, username: "unknown" }
+    }
+  ]
+};
+
+const deserializedArrayBody = [
+  {
+    ...serializedArrayBody.data[0].attributes,
+    meta: serializedArrayBody.data[0].meta
+  },
+  {
+    ...serializedArrayBody.data[1].attributes,
+    meta: serializedArrayBody.data[1].meta
+  }
+];
+
+const arrayAttributes = [
+  serializedArrayBody.data[0].attributes,
+  serializedArrayBody.data[1].attributes
+];
+
+const arrayMeta = [
+  serializedArrayBody.data[0].meta,
+  serializedArrayBody.data[1].meta
+];
 
 test.group("RequestService", () => {
-  test("throw exception when config file is missing", assert => {
-    const requestService = () => new RequestService({ Config: new Config() });
-    assert.throw(requestService, "The 'config/jsonapi.js' file is missing");
-  });
-
-  test("load correctly config from config file", assert => {
-    const config = new Config();
-    config.set("jsonapi", { someKey: "someValue" });
-
-    const requestService = new RequestService({ Config: config });
-    assert.deepEqual(requestService.config, { someKey: "someValue" });
-  });
-
-  test("get all attributes from serialized body", async assert => {
+  test("get all attributes from object serialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(request => {
+    const server = requestServiceHelper.createServer(request => {
       requestService = request;
     });
 
     await supertest(server)
       .post("/")
-      .send({ data: { attributes: { someKey: "someValue" } } })
+      .send(serializedObjectBody)
       .expect(200);
 
-    assert.deepEqual(requestService.allAttributes(), { someKey: "someValue" });
+    assert.deepEqual(requestService.allAttributes(), objectAttributes);
   });
 
-  test("get all attributes from deserialized body", async assert => {
+  test("get all attributes from object deserialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(
+    const server = requestServiceHelper.createServer(
       request => {
         requestService = request;
       },
@@ -48,32 +78,31 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send({ someKey: "someValue" })
+      .send(deserializedObjectBody)
       .expect(200);
 
-    assert.deepEqual(requestService.config, { deserializeBody: true });
-    assert.deepEqual(requestService.allAttributes(), { someKey: "someValue" });
+    assert.deepEqual(requestService.allAttributes(), objectAttributes);
   });
 
-  test("get all meta from serialized body", async assert => {
+  test("get all attributes from array serialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(request => {
+    const server = requestServiceHelper.createServer(request => {
       requestService = request;
     });
 
     await supertest(server)
       .post("/")
-      .send({ data: { meta: { someKey: "someValue" } } })
+      .send(serializedArrayBody)
       .expect(200);
 
-    assert.deepEqual(requestService.allMeta(), { someKey: "someValue" });
+    assert.deepEqual(requestService.allAttributes(), arrayAttributes);
   });
 
-  test("get all meta from deserialized body", async assert => {
+  test("get all attributes from array deserialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(
+    const server = requestServiceHelper.createServer(
       request => {
         requestService = request;
       },
@@ -82,38 +111,31 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send({ meta: { someKey: "someValue" } })
+      .send(deserializedArrayBody)
       .expect(200);
 
-    assert.deepEqual(requestService.config, { deserializeBody: true });
-    assert.deepEqual(requestService.allMeta(), { someKey: "someValue" });
+    assert.deepEqual(requestService.allAttributes(), arrayAttributes);
   });
 
-  test("get only some attribute from serialized body", async assert => {
+  test("get all meta from object serialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(request => {
+    const server = requestServiceHelper.createServer(request => {
       requestService = request;
     });
 
     await supertest(server)
       .post("/")
-      .send({
-        data: {
-          attributes: { someKey: "someValue", anotherKey: "anotherValue" }
-        }
-      })
+      .send(serializedObjectBody)
       .expect(200);
 
-    assert.deepEqual(requestService.onlyAttributes(["someKey"]), {
-      someKey: "someValue"
-    });
+    assert.deepEqual(requestService.allMeta(), objectMeta);
   });
 
-  test("get only some attribute from deserialized body", async assert => {
+  test("get all meta from object deserialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(
+    const server = requestServiceHelper.createServer(
       request => {
         requestService = request;
       },
@@ -122,40 +144,31 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send({ someKey: "someValue", anotherKey: "anotherValue" })
+      .send(deserializedObjectBody)
       .expect(200);
 
-    assert.deepEqual(requestService.config, { deserializeBody: true });
-    assert.deepEqual(requestService.onlyAttributes(["someKey"]), {
-      someKey: "someValue"
-    });
+    assert.deepEqual(requestService.allMeta(), objectMeta);
   });
 
-  test("get only some meta from serialized body", async assert => {
+  test("get all meta from array serialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(request => {
+    const server = requestServiceHelper.createServer(request => {
       requestService = request;
     });
 
     await supertest(server)
       .post("/")
-      .send({
-        data: {
-          meta: { someKey: "someValue", anotherKey: "anotherValue" }
-        }
-      })
+      .send(serializedArrayBody)
       .expect(200);
 
-    assert.deepEqual(requestService.onlyMeta(["someKey"]), {
-      someKey: "someValue"
-    });
+    assert.deepEqual(requestService.allMeta(), arrayMeta);
   });
 
-  test("get only some meta from deserialized body", async assert => {
+  test("get all meta from array deserialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(
+    const server = requestServiceHelper.createServer(
       request => {
         requestService = request;
       },
@@ -164,40 +177,33 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send({ meta: { someKey: "someValue", anotherKey: "anotherValue" } })
+      .send(deserializedArrayBody)
       .expect(200);
 
-    assert.deepEqual(requestService.config, { deserializeBody: true });
-    assert.deepEqual(requestService.onlyMeta(["someKey"]), {
-      someKey: "someValue"
-    });
+    assert.deepEqual(requestService.allMeta(), arrayMeta);
   });
 
-  test("get except some attribute from serialized body", async assert => {
+  test("get only some attribute from object serialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(request => {
+    const server = requestServiceHelper.createServer(request => {
       requestService = request;
     });
 
     await supertest(server)
       .post("/")
-      .send({
-        data: {
-          attributes: { someKey: "someValue", anotherKey: "anotherValue" }
-        }
-      })
+      .send(serializedObjectBody)
       .expect(200);
 
-    assert.deepEqual(requestService.exceptAttributes(["someKey"]), {
-      anotherKey: "anotherValue"
+    assert.deepEqual(requestService.onlyAttributes(["name"]), {
+      name: "Marcelo Junior"
     });
   });
 
-  test("get only some attribute from deserialized body", async assert => {
+  test("get only some attribute from object deserialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(
+    const server = requestServiceHelper.createServer(
       request => {
         requestService = request;
       },
@@ -206,40 +212,36 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send({ someKey: "someValue", anotherKey: "anotherValue" })
+      .send(deserializedObjectBody)
       .expect(200);
 
-    assert.deepEqual(requestService.config, { deserializeBody: true });
-    assert.deepEqual(requestService.exceptAttributes(["someKey"]), {
-      anotherKey: "anotherValue"
+    assert.deepEqual(requestService.onlyAttributes(["name"]), {
+      name: "Marcelo Junior"
     });
   });
 
-  test("get except some meta from serialized body", async assert => {
+  test("get only some attribute from array serialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(request => {
+    const server = requestServiceHelper.createServer(request => {
       requestService = request;
     });
 
     await supertest(server)
       .post("/")
-      .send({
-        data: {
-          meta: { someKey: "someValue", anotherKey: "anotherValue" }
-        }
-      })
+      .send(serializedArrayBody)
       .expect(200);
 
-    assert.deepEqual(requestService.exceptMeta(["someKey"]), {
-      anotherKey: "anotherValue"
-    });
+    assert.deepEqual(requestService.onlyAttributes(["name"]), [
+      { name: "Marcelo Junior" },
+      { name: "Suellen Siqueira" }
+    ]);
   });
 
-  test("get only some attribute from deserialized body", async assert => {
+  test("get only some attribute from array deserialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(
+    const server = requestServiceHelper.createServer(
       request => {
         requestService = request;
       },
@@ -248,38 +250,256 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send({ meta: { someKey: "someValue", anotherKey: "anotherValue" } })
+      .send(deserializedArrayBody)
       .expect(200);
 
-    assert.deepEqual(requestService.config, { deserializeBody: true });
-    assert.deepEqual(requestService.exceptMeta(["someKey"]), {
-      anotherKey: "anotherValue"
-    });
+    assert.deepEqual(requestService.onlyAttributes(["name"]), [
+      { name: "Marcelo Junior" },
+      { name: "Suellen Siqueira" }
+    ]);
   });
 
-  test("get input attribute from serialized body", async assert => {
+  test("get only some meta from object serialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(request => {
+    const server = requestServiceHelper.createServer(request => {
       requestService = request;
     });
 
     await supertest(server)
       .post("/")
-      .send({
-        data: {
-          attributes: { someKey: "someValue", anotherKey: "anotherValue" }
-        }
-      })
+      .send(serializedObjectBody)
       .expect(200);
 
-    assert.equal(requestService.inputAttribute("someKey"), "someValue");
+    assert.deepEqual(requestService.onlyMeta(["profile"]), {
+      profile: "github.com/marceloadsj"
+    });
+  });
+
+  test("get only some meta from object deserialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(
+      request => {
+        requestService = request;
+      },
+      { deserializeBody: true }
+    );
+
+    await supertest(server)
+      .post("/")
+      .send(deserializedObjectBody)
+      .expect(200);
+
+    assert.deepEqual(requestService.onlyMeta(["profile"]), {
+      profile: "github.com/marceloadsj"
+    });
+  });
+
+  test("get only some meta from array serialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(request => {
+      requestService = request;
+    });
+
+    await supertest(server)
+      .post("/")
+      .send(serializedArrayBody)
+      .expect(200);
+
+    assert.deepEqual(requestService.onlyMeta(["profile"]), [
+      { profile: "github.com/marceloadsj" },
+      { profile: null }
+    ]);
+  });
+
+  test("get only some meta from array deserialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(
+      request => {
+        requestService = request;
+      },
+      { deserializeBody: true }
+    );
+
+    await supertest(server)
+      .post("/")
+      .send(deserializedArrayBody)
+      .expect(200);
+
+    assert.deepEqual(requestService.onlyMeta(["profile"]), [
+      { profile: "github.com/marceloadsj" },
+      { profile: null }
+    ]);
+  });
+
+  test("get except some attribute from object serialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(request => {
+      requestService = request;
+    });
+
+    await supertest(server)
+      .post("/")
+      .send(serializedObjectBody)
+      .expect(200);
+
+    assert.deepEqual(requestService.exceptAttributes(["name"]), {
+      gender: "male"
+    });
+  });
+
+  test("get except some attribute from array serialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(request => {
+      requestService = request;
+    });
+
+    await supertest(server)
+      .post("/")
+      .send(serializedArrayBody)
+      .expect(200);
+
+    assert.deepEqual(requestService.exceptAttributes(["name"]), [
+      { gender: "male" },
+      { gender: "female" }
+    ]);
+  });
+
+  test("get except some meta from object serialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(request => {
+      requestService = request;
+    });
+
+    await supertest(server)
+      .post("/")
+      .send(serializedObjectBody)
+      .expect(200);
+
+    assert.deepEqual(requestService.exceptMeta(["profile"]), {
+      username: "marceloadsj"
+    });
+  });
+
+  test("get except some meta from array serialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(request => {
+      requestService = request;
+    });
+
+    await supertest(server)
+      .post("/")
+      .send(serializedArrayBody)
+      .expect(200);
+
+    assert.deepEqual(requestService.exceptMeta(["profile"]), [
+      { username: "marceloadsj" },
+      { username: "unknown" }
+    ]);
+  });
+
+  test("get only some attribute from object serialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(request => {
+      requestService = request;
+    });
+
+    await supertest(server)
+      .post("/")
+      .send(serializedObjectBody)
+      .expect(200);
+
+    assert.deepEqual(requestService.onlyAttributes(["name"]), {
+      name: "Marcelo Junior"
+    });
+  });
+
+  test("get only some attribute from object deserialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(
+      request => {
+        requestService = request;
+      },
+      { deserializeBody: true }
+    );
+
+    await supertest(server)
+      .post("/")
+      .send(deserializedObjectBody)
+      .expect(200);
+
+    assert.deepEqual(requestService.onlyAttributes(["name"]), {
+      name: "Marcelo Junior"
+    });
+  });
+
+  test("get only some attribute from array serialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(request => {
+      requestService = request;
+    });
+
+    await supertest(server)
+      .post("/")
+      .send(serializedArrayBody)
+      .expect(200);
+
+    assert.deepEqual(requestService.onlyAttributes(["name"]), [
+      { name: "Marcelo Junior" },
+      { name: "Suellen Siqueira" }
+    ]);
+  });
+
+  test("get only some attribute from array deserialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(
+      request => {
+        requestService = request;
+      },
+      { deserializeBody: true }
+    );
+
+    await supertest(server)
+      .post("/")
+      .send(deserializedArrayBody)
+      .expect(200);
+
+    assert.deepEqual(requestService.onlyAttributes(["name"]), [
+      { name: "Marcelo Junior" },
+      { name: "Suellen Siqueira" }
+    ]);
+  });
+
+  test("get input attribute from object serialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(request => {
+      requestService = request;
+    });
+
+    await supertest(server)
+      .post("/")
+      .send(serializedObjectBody)
+      .expect(200);
+
+    assert.equal(requestService.inputAttribute("name"), "Marcelo Junior");
   });
 
   test("get input attribute from deserialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(
+    const server = requestServiceHelper.createServer(
       request => {
         requestService = request;
       },
@@ -288,36 +508,34 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send({ someKey: "someValue", anotherKey: "anotherValue" })
+      .send(deserializedObjectBody)
       .expect(200);
 
-    assert.deepEqual(requestService.config, { deserializeBody: true });
-    assert.equal(requestService.inputAttribute("someKey"), "someValue");
+    assert.equal(requestService.inputAttribute("name"), "Marcelo Junior");
   });
 
-  test("get input meta from serialized body", async assert => {
+  test("get input attribute from array serialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(request => {
+    const server = requestServiceHelper.createServer(request => {
       requestService = request;
     });
 
     await supertest(server)
       .post("/")
-      .send({
-        data: {
-          meta: { someKey: "someValue", anotherKey: "anotherValue" }
-        }
-      })
+      .send(serializedArrayBody)
       .expect(200);
 
-    assert.equal(requestService.inputMeta("someKey"), "someValue");
+    assert.deepEqual(requestService.inputAttribute("name"), [
+      "Marcelo Junior",
+      "Suellen Siqueira"
+    ]);
   });
 
-  test("get input attribute from deserialized body", async assert => {
+  test("get input attribute from array deserialized body", async assert => {
     let requestService;
 
-    const server = helpers.createServer(
+    const server = requestServiceHelper.createServer(
       request => {
         requestService = request;
       },
@@ -326,10 +544,84 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send({ meta: { someKey: "someValue", anotherKey: "anotherValue" } })
+      .send(deserializedArrayBody)
       .expect(200);
 
-    assert.deepEqual(requestService.config, { deserializeBody: true });
-    assert.equal(requestService.inputMeta("someKey"), "someValue");
+    assert.deepEqual(requestService.inputAttribute("name"), [
+      "Marcelo Junior",
+      "Suellen Siqueira"
+    ]);
+  });
+
+  test("get input meta from object serialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(request => {
+      requestService = request;
+    });
+
+    await supertest(server)
+      .post("/")
+      .send(serializedObjectBody)
+      .expect(200);
+
+    assert.equal(requestService.inputMeta("profile"), "github.com/marceloadsj");
+  });
+
+  test("get input meta from object deserialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(
+      request => {
+        requestService = request;
+      },
+      { deserializeBody: true }
+    );
+
+    await supertest(server)
+      .post("/")
+      .send(deserializedObjectBody)
+      .expect(200);
+
+    assert.equal(requestService.inputMeta("profile"), "github.com/marceloadsj");
+  });
+
+  test("get input meta from array serialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(request => {
+      requestService = request;
+    });
+
+    await supertest(server)
+      .post("/")
+      .send(serializedArrayBody)
+      .expect(200);
+
+    assert.deepEqual(requestService.inputMeta("profile"), [
+      "github.com/marceloadsj",
+      null
+    ]);
+  });
+
+  test("get input meta from array deserialized body", async assert => {
+    let requestService;
+
+    const server = requestServiceHelper.createServer(
+      request => {
+        requestService = request;
+      },
+      { deserializeBody: true }
+    );
+
+    await supertest(server)
+      .post("/")
+      .send(deserializedArrayBody)
+      .expect(200);
+
+    assert.deepEqual(requestService.inputMeta("profile"), [
+      "github.com/marceloadsj",
+      null
+    ]);
   });
 });

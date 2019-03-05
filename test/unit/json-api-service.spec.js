@@ -1,91 +1,87 @@
 const test = require("japa");
-const { Config } = require("@adonisjs/sink");
 
-const JsonApiService = require("../src/services/JsonApiService");
+const JsonApiService = require("../../src/services/JsonApiService");
 
 test.group("JsonApiService", () => {
-  test("throw exception when config file is missing", assert => {
-    const jsonApiService = () => new JsonApiService({ Config: new Config() });
-    assert.throw(jsonApiService, "The 'config/jsonapi.js' file is missing");
-  });
-
-  test("load correctly config from config file", assert => {
-    const config = new Config();
-    config.set("jsonapi", { someKey: "someValue" });
-
-    const jsonApiService = new JsonApiService({ Config: config });
-    assert.deepEqual(jsonApiService.config, { someKey: "someValue" });
-  });
-
   test("get type from model based on constructor name", assert => {
-    const config = new Config();
-    config.set("jsonapi", {
-      types: {
-        user: { model: "App/Models/User" }
-      }
-    });
-
-    const jsonApiService = new JsonApiService({ Config: config });
-
     class User {}
     const model = new User();
+
+    const config = { types: { user: { model: "App/Models/User" } } };
+
+    const jsonApiService = new JsonApiService({ config });
 
     assert.equal(jsonApiService.getTypeFromModel(model), "user");
   });
 
   test("throw an error if no type is found", assert => {
-    const config = new Config();
-    config.set("jsonapi", {
-      types: {
-        user: { model: "App/Models/User" }
-      }
-    });
-
-    const jsonApiService = new JsonApiService({ Config: config });
-
     class Token {}
     const model = new Token();
 
+    const jsonApiService = new JsonApiService({ config: {} });
+
     assert.throw(
       () => jsonApiService.getTypeFromModel(model),
-      "The type 'Token' was not found in config file"
+      "The type with model 'Token' was not found in json api config file"
     );
   });
 
-  test("serialize a simple model", assert => {
-    const config = new Config();
-    config.set("jsonapi", {
-      types: {
-        user: { model: "App/Models/User" }
-      }
-    });
-
-    const jsonApiService = new JsonApiService({ Config: config });
-
+  test("serialize a simple model passing the type", assert => {
     class User {}
     const model = new User();
 
+    model.name = "Marcelo Junior";
+    model.gender = "male";
+
+    const config = { types: { user: { model: "App/Models/User" } } };
+
+    const jsonApiService = new JsonApiService({ config });
+
     assert.deepEqual(jsonApiService.serialize("user", model), {
       jsonapi: { version: "1.0" },
-      data: null,
+      data: {
+        id: undefined,
+        type: "user",
+        attributes: { name: "Marcelo Junior", gender: "male" },
+        links: undefined,
+        relationships: undefined
+      },
       included: undefined,
       links: undefined,
       meta: undefined
     });
   });
 
-  test("deserialize a simple model", assert => {
-    const config = new Config();
-    config.set("jsonapi", {
-      types: {
-        user: { model: "App/Models/User" }
-      }
-    });
-
-    const jsonApiService = new JsonApiService({ Config: config });
-
+  test("serialize a simple model without type", assert => {
     class User {}
     const model = new User();
+
+    model.name = "Marcelo Junior";
+    model.gender = "male";
+
+    const config = { types: { user: { model: "App/Models/User" } } };
+
+    const jsonApiService = new JsonApiService({ config });
+
+    assert.deepEqual(jsonApiService.serializeModel(model), {
+      jsonapi: { version: "1.0" },
+      data: {
+        id: undefined,
+        type: "user",
+        attributes: { name: "Marcelo Junior", gender: "male" },
+        links: undefined,
+        relationships: undefined
+      },
+      included: undefined,
+      links: undefined,
+      meta: undefined
+    });
+  });
+
+  test("deserialize a simple model passing the type", assert => {
+    const config = { types: { user: { model: "App/Models/User" } } };
+
+    const jsonApiService = new JsonApiService({ config });
 
     assert.deepEqual(
       jsonApiService.deserialize("user", {
@@ -100,13 +96,16 @@ test.group("JsonApiService", () => {
   });
 
   test("serialize simple error object", assert => {
-    const config = new Config();
-    config.set("jsonapi", {});
+    const jsonApiService = new JsonApiService({ config: {} });
 
-    const jsonApiService = new JsonApiService({ Config: config });
+    const error = new Error("Critical Error");
+    error.code = "CRITICAL_ERROR";
+    error.status = 500;
 
-    assert.deepEqual(jsonApiService.serializeError(new Error("Some Value")), {
-      errors: [{ detail: "Some Value", code: undefined, status: undefined }]
+    assert.deepEqual(jsonApiService.serializeError(error), {
+      errors: [
+        { detail: "Critical Error", code: "CRITICAL_ERROR", status: "500" }
+      ]
     });
   });
 });
