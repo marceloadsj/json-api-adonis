@@ -1,9 +1,9 @@
 const { LogicalException } = require("@adonisjs/generic-exceptions");
 
 class TypeNotFoundException extends LogicalException {
-  static invoke(type) {
+  static invoke(model) {
     return new this(
-      `The type '${type}' was not found in config file`,
+      `The type with model '${model}' was not found in json api config file`,
       500,
       "TYPE_NOT_FOUND_EXCEPTION"
     );
