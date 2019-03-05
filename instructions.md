@@ -1,25 +1,36 @@
 # 🐙 Json Api Adonis - How to Use
 
-&nbsp;
 **Create config/jsonapi.js file with:**
 
 ```
 module.exports = {
   /* here some specific wrapper options */
 
-  options: { /* the global/common options */ },
+  options: {
+    /* the global/common options */
+  },
 
   types: {
     /* all your supported types here, like */
+
     user: {
+      // the model ensures you don't need to worry about passing type
       model: "App/Models/User",
-      options: { /* the specific type/model options */ }
+
+      options: {
+        /* the specific type/model options */
+      }
+    },
+
+    token: {
+      /* if don't have model, just pass the type to serializer */
     }
   }
 };
 ```
 
-&nbsp;
+---
+
 **Add json api service provider in start/app.js:**
 
 ```
@@ -29,8 +40,9 @@ const providers = [
 ]
 ```
 
-&nbsp;
-**Add json api global middleware:**
+---
+
+**Add json api global middleware in start/kernel.js:**
 
 ```
 const globalMiddleware = [
@@ -39,7 +51,8 @@ const globalMiddleware = [
 ]
 ```
 
-&nbsp;
+---
+
 **Add json api serializer in your models:**
 
 ```
@@ -47,8 +60,6 @@ static get Serializer() {
     return 'json-api-adonis/serializers/JsonApiSerializer'
 }
 ```
-
-&nbsp;
 
 ---
 
@@ -63,7 +74,8 @@ The specific options are:
 | deserializeBody | Deserialize request body when doing the content negotiation | true    |
 
 Examples:
-**deserializeBody**:
+
+**deserializeBody - get some body information using request.input**:
 
 - _true_ (default): `request.input('myKey')`
 - _false_: `request.input('data.attributes.myKey')`
@@ -73,22 +85,25 @@ Examples:
 
 ## Middlewares:
 
-**Global JsonApiMiddleware**
-The global middleware will do the [Content Negotiation](https://jsonapi.org/format/#content-negotiation) in all client requests, throwing errors when something is wrong. This middleware also put the right Content-Type header in responses.
+**Global JsonApiMiddleware:** This one will do the [Content Negotiation](https://jsonapi.org/format/#content-negotiation) in all client requests, throwing errors when something is wrong. This middleware also put the right Content-Type header in responses.
 
 ---
 
 ## Services:
 
+**JsonApiService**
+
 You can import and use the JsonApiService with:
 
-`const JsonApiService = use('json-api-adonis/services/JsonApiService')`
+```
+const JsonApiService = use('json-api-adonis/services/JsonApiService')
+// or with alias
+const JsonApiService = use('JsonApiService')
+```
 
-or the alias
+**RequestService**
 
-`const JsonApiService = use('JsonApiService')`
-
-You also have the jsonapi request helper in controllers like:
+You also have the jsonapi request helper service in controllers like:
 
 ```
 async myEndpoint({ jsonapi }) {
@@ -96,7 +111,7 @@ async myEndpoint({ jsonapi }) {
 }
 ```
 
-The methods are scoped in meta and attributes key:
+The request service methods are scoped in meta and attributes key like:
 
 - **allMeta**: works like request.all();
 - **onlyMeta**: works like request.only();
