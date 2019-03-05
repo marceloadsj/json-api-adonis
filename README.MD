@@ -4,6 +4,7 @@ Wrapper between [json-api-serializer](https://www.npmjs.com/package/json-api-ser
 
 [![NPM](https://img.shields.io/npm/v/json-api-adonis.svg)](https://www.npmjs.com/package/json-api-adonis)
 [![Build Status](https://travis-ci.org/marceloadsj/json-api-adonis.svg?branch=master)](https://travis-ci.org/marceloadsj/json-api-adonis)
+[![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
 ### The package is on pre-release, some API changes can happen!
 
@@ -13,20 +14,25 @@ Wrapper between [json-api-serializer](https://www.npmjs.com/package/json-api-ser
 
 **Install (better with [_@adonisjs/cli_](https://github.com/adonisjs/adonis-cli)):**
 
-With NPM: `adonis install json-api-adonis`
+```
+adonis install json-api-adonis
+// or
+adonis install json-api-adonis --yarn
+```
 
-With Yarn: `adonis install json-api-adonis --yarn`
+---
 
-&nbsp;
 Or without [_@adonisjs/cli_](https://github.com/adonisjs/adonis-cli), but remember **config/jsonapi.js** need to be created by hand:
 
-With NPM: `npm install json-api-adonis --save`
+```
+npm install json-api-adonis --save
+// or
+yarn add json-api-adonis
+```
 
-With Yarn: `yarn add json-api-adonis`
+---
 
-#### Then please, check the [instructions.md](instructions.md) file!
-
-&nbsp;
+### Then please, check the [instructions.md](instructions.md) file!
 
 ---
 
