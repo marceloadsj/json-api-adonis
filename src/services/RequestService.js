@@ -1,25 +1,36 @@
 "use strict";
 
-const MissingConfigFileException = require("../exceptions/MissingConfigFileException");
+const omit = require("omit");
 
 class RequestService {
-  constructor({ Config, request }) {
-    this.config = Config.get("jsonapi");
-
-    if (!this.config) {
-      throw MissingConfigFileException.invoke();
-    }
-
+  constructor({ config, request }) {
+    this.config = config;
     this.request = request;
   }
 
   _all(key) {
     if (this.config.deserializeBody) {
       if (key === "attributes") {
+        if (Array.isArray(this.request.body)) {
+          return this.request.body.map(data => {
+            return omit(["meta", "links", "relationships"], data);
+          });
+        }
+
         return this.request.except(["meta", "links", "relationships"]);
       }
 
+      if (Array.isArray(this.request.body)) {
+        return this.request.body.map(data => data[key]);
+      }
+
       return this.request.input(key);
+    }
+
+    const { data } = this.request.all();
+
+    if (Array.isArray(data)) {
+      return data.map(data => data[key]);
     }
 
     return this.request.input(`data.${key}`);
@@ -35,7 +46,37 @@ class RequestService {
 
   _onlyOrExcept(keys, method, mainKey) {
     if (this.config.deserializeBody) {
-      if (mainKey !== "attributes") {
+      if (mainKey === "attributes") {
+        if (Array.isArray(this.request.body)) {
+          return this.request.body.map(data => {
+            let parsedData = {};
+
+            Object.keys(data).forEach(key => {
+              if (method === "only" && keys.includes(key)) {
+                parsedData[key] = data[key];
+              } else if (method === "except" && !keys.includes(key)) {
+                parsedData[key] = data[key];
+              }
+            });
+
+            return parsedData;
+          });
+        }
+      } else {
+        if (Array.isArray(this.request.body)) {
+          return this.request.body.map(data => {
+            let parsedData = {};
+
+            Object.keys(data[mainKey]).forEach(key => {
+              if (keys.includes(key)) {
+                parsedData[key] = data[mainKey][key];
+              }
+            });
+
+            return parsedData;
+          });
+        }
+
         keys = keys.map(key => `${mainKey}.${key}`);
       }
 
@@ -44,6 +85,24 @@ class RequestService {
       if (mainKey === "attributes") return data;
 
       return data[mainKey];
+    }
+
+    const body = this.request.all();
+
+    if (Array.isArray(body.data)) {
+      return body.data.map(data => {
+        let parsedData = {};
+
+        Object.keys(data[mainKey]).forEach(key => {
+          if (method === "only" && keys.includes(key)) {
+            parsedData[key] = data[mainKey][key];
+          } else if (method === "except" && !keys.includes(key)) {
+            parsedData[key] = data[mainKey][key];
+          }
+        });
+
+        return parsedData;
+      });
     }
 
     keys = keys.map(key => `data.${mainKey}.${key}`);
@@ -72,10 +131,34 @@ class RequestService {
   _input(key, defaultValue, mainKey) {
     if (this.config.deserializeBody) {
       if (mainKey === "attributes") {
+        if (Array.isArray(this.request.body)) {
+          return this.request.body.map(data => {
+            return data[key] === undefined ? defaultValue : data[key];
+          });
+        }
+
         return this.request.input(key, defaultValue);
       }
 
+      if (Array.isArray(this.request.body)) {
+        return this.request.body.map(data => {
+          if (data[mainKey][key] === undefined) return defaultValue;
+
+          return data[mainKey][key];
+        });
+      }
+
       return this.request.input(`${mainKey}.${key}`, defaultValue);
+    }
+
+    const body = this.request.all();
+
+    if (Array.isArray(body.data)) {
+      return body.data.map(data => {
+        if (data[mainKey][key] === undefined) return defaultValue;
+
+        return data[mainKey][key];
+      });
     }
 
     return this.request.input(`data.${mainKey}.${key}`, defaultValue);

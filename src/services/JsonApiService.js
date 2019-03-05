@@ -2,18 +2,12 @@
 
 const JsonApiSerializer = require("json-api-serializer");
 
-const MissingConfigFileException = require("../exceptions/MissingConfigFileException");
 const TypeNotFoundException = require("../exceptions/TypeNotFoundException");
 
 class JsonApiService {
-  constructor({ Config, Logger }) {
+  constructor({ config, Logger }) {
     this.Logger = Logger;
-
-    this.config = Config.get("jsonapi");
-
-    if (!this.config) {
-      throw MissingConfigFileException.invoke();
-    }
+    this.config = config;
 
     this.jsonApiSerializer = new JsonApiSerializer(this.config.options);
 
@@ -31,7 +25,7 @@ class JsonApiService {
 
     if (this.config.types) {
       Object.keys(this.config.types).forEach(key => {
-        if (this.config.types[key].model.endsWith(name)) {
+        if (this.config.types[key].model.endsWith(`/${name}`)) {
           type = key;
           return true;
         }
@@ -45,16 +39,22 @@ class JsonApiService {
     return type;
   }
 
-  serialize(type, data) {
-    return this.jsonApiSerializer.serialize(type, data);
+  serialize(type, model) {
+    return this.jsonApiSerializer.serialize(type, model);
+  }
+
+  serializeModel(model) {
+    const type = this.getTypeFromModel(model);
+
+    return this.jsonApiSerializer.serialize(type, model);
   }
 
   serializeError(error) {
     return this.jsonApiSerializer.serializeError(error);
   }
 
-  deserialize(type, data) {
-    return this.jsonApiSerializer.deserialize(type, data);
+  deserialize(type, model) {
+    return this.jsonApiSerializer.deserialize(type, model);
   }
 }
 
