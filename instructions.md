@@ -114,11 +114,13 @@ async myEndpoint({ jsonapi }) {
 The request service methods are scoped in meta and attributes key like:
 
 - **allMeta**: works like request.all();
-- **onlyMeta**: works like request.only();
-- **exceptMeta**: works like request.except();
-- **inputMeta**: works like request.input();
+- **onlyMeta**: works like request.only() or request.collect();
+- **exceptMeta**: works like request.except() or request.collect();
+- **inputMeta**: works like request.input() or request.collect();
 
 - **allAttributes**: works like request.all();
-- **onlyAttributes**: works like request.only();
-- **exceptAttributes**: works like request.except();
-- **inputAttribute**: works like request.input();
+- **onlyAttributes**: works like request.only() or request.collect();
+- **exceptAttributes**: works like request.except() or request.collect();
+- **inputAttribute**: works like request.input() or request.collect();
+
+All methods works with serialized or deserialized body, and with single or multiple resources body.
