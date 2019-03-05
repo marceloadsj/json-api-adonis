@@ -31,7 +31,7 @@ module.exports = {
 
 ---
 
-**Add json api service provider in start/app.js:**
+**Add JsonApiProvider in start/app.js:**
 
 ```
 const providers = [
@@ -42,22 +42,22 @@ const providers = [
 
 ---
 
-**Add json api global middleware in start/kernel.js:**
+**Add ContentNegotiationMiddleware in start/kernel.js:**
 
 ```
 const globalMiddleware = [
     // ...
-    'json-api-adonis/middlewares/JsonApiMiddleware'
+    'json-api-adonis/middlewares/ContentNegotiationMiddleware'
 ]
 ```
 
 ---
 
-**Add json api serializer in your models:**
+**Add LucidSerializer in your models:**
 
 ```
 static get Serializer() {
-    return 'json-api-adonis/serializers/JsonApiSerializer'
+    return 'json-api-adonis/serializers/LucidSerializer'
 }
 ```
 
@@ -85,7 +85,7 @@ Examples:
 
 ## Middlewares:
 
-**Global JsonApiMiddleware:** This one will do the [Content Negotiation](https://jsonapi.org/format/#content-negotiation) in all client requests, throwing errors when something is wrong. This middleware also put the right Content-Type header in responses.
+**ContentNegotiationMiddleware:** This one will do the [Content Negotiation](https://jsonapi.org/format/#content-negotiation) in all client requests, throwing errors when something is wrong. This middleware also put the right Content-Type header in responses.
 
 ---
 
