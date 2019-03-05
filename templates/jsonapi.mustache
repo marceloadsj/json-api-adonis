@@ -11,10 +11,16 @@ module.exports = {
     /* all your supported types here, like */
 
     user: {
+      // the model ensures you don't need to worry about passing type
       model: "App/Models/User",
+
       options: {
         /* the specific type/model options */
       }
+    },
+
+    token: {
+      /* if don't have model, just pass the type to serializer */
     }
   }
 };
