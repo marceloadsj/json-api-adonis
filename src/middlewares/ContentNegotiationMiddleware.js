@@ -34,10 +34,13 @@ class ContentNegotiationMiddleware {
     }
 
     if (request.hasBody() && this.config.deserializeBody) {
-      const data = request.input("data");
+      const body = request.all();
 
-      if (data) {
-        request.body = this.JsonApiService.deserialize(data.type, request.body);
+      if (body) {
+        request.body = this.JsonApiService.deserialize(
+          { type: data => data.type },
+          body
+        );
       }
     }
 
