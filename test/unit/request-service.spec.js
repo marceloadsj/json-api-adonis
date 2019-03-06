@@ -3,53 +3,6 @@ const supertest = require("supertest");
 
 const requestServiceHelper = require("./requestServiceHelper");
 
-const serializedObjectBody = {
-  data: {
-    attributes: { name: "Marcelo Junior", gender: "male" },
-    meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
-  }
-};
-
-const deserializedObjectBody = {
-  ...serializedObjectBody.data.attributes,
-  meta: serializedObjectBody.data.meta
-};
-
-const objectAttributes = serializedObjectBody.data.attributes;
-
-const objectMeta = serializedObjectBody.data.meta;
-
-const serializedArrayBody = {
-  data: [
-    { ...serializedObjectBody.data },
-    {
-      attributes: { name: "Suellen Siqueira", gender: "female" },
-      meta: { profile: null, username: "unknown" }
-    }
-  ]
-};
-
-const deserializedArrayBody = [
-  {
-    ...serializedArrayBody.data[0].attributes,
-    meta: serializedArrayBody.data[0].meta
-  },
-  {
-    ...serializedArrayBody.data[1].attributes,
-    meta: serializedArrayBody.data[1].meta
-  }
-];
-
-const arrayAttributes = [
-  serializedArrayBody.data[0].attributes,
-  serializedArrayBody.data[1].attributes
-];
-
-const arrayMeta = [
-  serializedArrayBody.data[0].meta,
-  serializedArrayBody.data[1].meta
-];
-
 test.group("RequestService", () => {
   test("get all attributes from object serialized body", async assert => {
     let requestService;
@@ -60,10 +13,18 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedObjectBody)
+      .send({
+        data: {
+          attributes: { name: "Marcelo Junior", gender: "male" },
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        }
+      })
       .expect(200);
 
-    assert.deepEqual(requestService.allAttributes(), objectAttributes);
+    assert.deepEqual(requestService.allAttributes(), {
+      name: "Marcelo Junior",
+      gender: "male"
+    });
   });
 
   test("get all attributes from object deserialized body", async assert => {
@@ -78,10 +39,17 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(deserializedObjectBody)
+      .send({
+        name: "Marcelo Junior",
+        gender: "male",
+        meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+      })
       .expect(200);
 
-    assert.deepEqual(requestService.allAttributes(), objectAttributes);
+    assert.deepEqual(requestService.allAttributes(), {
+      name: "Marcelo Junior",
+      gender: "male"
+    });
   });
 
   test("get all attributes from array serialized body", async assert => {
@@ -93,10 +61,24 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedArrayBody)
+      .send({
+        data: [
+          {
+            attributes: { name: "Marcelo Junior", gender: "male" },
+            meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+          },
+          {
+            attributes: { name: "Suellen Siqueira", gender: "female" },
+            meta: { profile: null, username: "unknown" }
+          }
+        ]
+      })
       .expect(200);
 
-    assert.deepEqual(requestService.allAttributes(), arrayAttributes);
+    assert.deepEqual(requestService.allAttributes(), [
+      { name: "Marcelo Junior", gender: "male" },
+      { name: "Suellen Siqueira", gender: "female" }
+    ]);
   });
 
   test("get all attributes from array deserialized body", async assert => {
@@ -111,10 +93,24 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(deserializedArrayBody)
+      .send([
+        {
+          name: "Marcelo Junior",
+          gender: "male",
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        },
+        {
+          name: "Suellen Siqueira",
+          gender: "female",
+          meta: { profile: null, username: "unknown" }
+        }
+      ])
       .expect(200);
 
-    assert.deepEqual(requestService.allAttributes(), arrayAttributes);
+    assert.deepEqual(requestService.allAttributes(), [
+      { name: "Marcelo Junior", gender: "male" },
+      { name: "Suellen Siqueira", gender: "female" }
+    ]);
   });
 
   test("get all meta from object serialized body", async assert => {
@@ -126,10 +122,18 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedObjectBody)
+      .send({
+        data: {
+          attributes: { name: "Marcelo Junior", gender: "male" },
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        }
+      })
       .expect(200);
 
-    assert.deepEqual(requestService.allMeta(), objectMeta);
+    assert.deepEqual(requestService.allMeta(), {
+      profile: "github.com/marceloadsj",
+      username: "marceloadsj"
+    });
   });
 
   test("get all meta from object deserialized body", async assert => {
@@ -144,10 +148,17 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(deserializedObjectBody)
+      .send({
+        name: "Marcelo Junior",
+        gender: "male",
+        meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+      })
       .expect(200);
 
-    assert.deepEqual(requestService.allMeta(), objectMeta);
+    assert.deepEqual(requestService.allMeta(), {
+      profile: "github.com/marceloadsj",
+      username: "marceloadsj"
+    });
   });
 
   test("get all meta from array serialized body", async assert => {
@@ -159,10 +170,24 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedArrayBody)
+      .send({
+        data: [
+          {
+            attributes: { name: "Marcelo Junior", gender: "male" },
+            meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+          },
+          {
+            attributes: { name: "Suellen Siqueira", gender: "female" },
+            meta: { profile: null, username: "unknown" }
+          }
+        ]
+      })
       .expect(200);
 
-    assert.deepEqual(requestService.allMeta(), arrayMeta);
+    assert.deepEqual(requestService.allMeta(), [
+      { profile: "github.com/marceloadsj", username: "marceloadsj" },
+      { profile: null, username: "unknown" }
+    ]);
   });
 
   test("get all meta from array deserialized body", async assert => {
@@ -177,10 +202,24 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(deserializedArrayBody)
+      .send([
+        {
+          name: "Marcelo Junior",
+          gender: "male",
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        },
+        {
+          name: "Suellen Siqueira",
+          gender: "female",
+          meta: { profile: null, username: "unknown" }
+        }
+      ])
       .expect(200);
 
-    assert.deepEqual(requestService.allMeta(), arrayMeta);
+    assert.deepEqual(requestService.allMeta(), [
+      { profile: "github.com/marceloadsj", username: "marceloadsj" },
+      { profile: null, username: "unknown" }
+    ]);
   });
 
   test("get only some attribute from object serialized body", async assert => {
@@ -192,7 +231,12 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedObjectBody)
+      .send({
+        data: {
+          attributes: { name: "Marcelo Junior", gender: "male" },
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        }
+      })
       .expect(200);
 
     assert.deepEqual(requestService.onlyAttributes(["name"]), {
@@ -212,7 +256,11 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(deserializedObjectBody)
+      .send({
+        name: "Marcelo Junior",
+        gender: "male",
+        meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+      })
       .expect(200);
 
     assert.deepEqual(requestService.onlyAttributes(["name"]), {
@@ -229,7 +277,18 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedArrayBody)
+      .send({
+        data: [
+          {
+            attributes: { name: "Marcelo Junior", gender: "male" },
+            meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+          },
+          {
+            attributes: { name: "Suellen Siqueira", gender: "female" },
+            meta: { profile: null, username: "unknown" }
+          }
+        ]
+      })
       .expect(200);
 
     assert.deepEqual(requestService.onlyAttributes(["name"]), [
@@ -250,7 +309,18 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(deserializedArrayBody)
+      .send([
+        {
+          name: "Marcelo Junior",
+          gender: "male",
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        },
+        {
+          name: "Suellen Siqueira",
+          gender: "female",
+          meta: { profile: null, username: "unknown" }
+        }
+      ])
       .expect(200);
 
     assert.deepEqual(requestService.onlyAttributes(["name"]), [
@@ -268,7 +338,12 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedObjectBody)
+      .send({
+        data: {
+          attributes: { name: "Marcelo Junior", gender: "male" },
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        }
+      })
       .expect(200);
 
     assert.deepEqual(requestService.onlyMeta(["profile"]), {
@@ -288,7 +363,11 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(deserializedObjectBody)
+      .send({
+        name: "Marcelo Junior",
+        gender: "male",
+        meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+      })
       .expect(200);
 
     assert.deepEqual(requestService.onlyMeta(["profile"]), {
@@ -305,7 +384,18 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedArrayBody)
+      .send({
+        data: [
+          {
+            attributes: { name: "Marcelo Junior", gender: "male" },
+            meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+          },
+          {
+            attributes: { name: "Suellen Siqueira", gender: "female" },
+            meta: { profile: null, username: "unknown" }
+          }
+        ]
+      })
       .expect(200);
 
     assert.deepEqual(requestService.onlyMeta(["profile"]), [
@@ -326,7 +416,18 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(deserializedArrayBody)
+      .send([
+        {
+          name: "Marcelo Junior",
+          gender: "male",
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        },
+        {
+          name: "Suellen Siqueira",
+          gender: "female",
+          meta: { profile: null, username: "unknown" }
+        }
+      ])
       .expect(200);
 
     assert.deepEqual(requestService.onlyMeta(["profile"]), [
@@ -344,7 +445,12 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedObjectBody)
+      .send({
+        data: {
+          attributes: { name: "Marcelo Junior", gender: "male" },
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        }
+      })
       .expect(200);
 
     assert.deepEqual(requestService.exceptAttributes(["name"]), {
@@ -361,7 +467,18 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedArrayBody)
+      .send({
+        data: [
+          {
+            attributes: { name: "Marcelo Junior", gender: "male" },
+            meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+          },
+          {
+            attributes: { name: "Suellen Siqueira", gender: "female" },
+            meta: { profile: null, username: "unknown" }
+          }
+        ]
+      })
       .expect(200);
 
     assert.deepEqual(requestService.exceptAttributes(["name"]), [
@@ -379,7 +496,12 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedObjectBody)
+      .send({
+        data: {
+          attributes: { name: "Marcelo Junior", gender: "male" },
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        }
+      })
       .expect(200);
 
     assert.deepEqual(requestService.exceptMeta(["profile"]), {
@@ -396,7 +518,18 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedArrayBody)
+      .send({
+        data: [
+          {
+            attributes: { name: "Marcelo Junior", gender: "male" },
+            meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+          },
+          {
+            attributes: { name: "Suellen Siqueira", gender: "female" },
+            meta: { profile: null, username: "unknown" }
+          }
+        ]
+      })
       .expect(200);
 
     assert.deepEqual(requestService.exceptMeta(["profile"]), [
@@ -414,7 +547,12 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedObjectBody)
+      .send({
+        data: {
+          attributes: { name: "Marcelo Junior", gender: "male" },
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        }
+      })
       .expect(200);
 
     assert.deepEqual(requestService.onlyAttributes(["name"]), {
@@ -434,7 +572,11 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(deserializedObjectBody)
+      .send({
+        name: "Marcelo Junior",
+        gender: "male",
+        meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+      })
       .expect(200);
 
     assert.deepEqual(requestService.onlyAttributes(["name"]), {
@@ -451,7 +593,18 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedArrayBody)
+      .send({
+        data: [
+          {
+            attributes: { name: "Marcelo Junior", gender: "male" },
+            meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+          },
+          {
+            attributes: { name: "Suellen Siqueira", gender: "female" },
+            meta: { profile: null, username: "unknown" }
+          }
+        ]
+      })
       .expect(200);
 
     assert.deepEqual(requestService.onlyAttributes(["name"]), [
@@ -472,7 +625,18 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(deserializedArrayBody)
+      .send([
+        {
+          name: "Marcelo Junior",
+          gender: "male",
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        },
+        {
+          name: "Suellen Siqueira",
+          gender: "female",
+          meta: { profile: null, username: "unknown" }
+        }
+      ])
       .expect(200);
 
     assert.deepEqual(requestService.onlyAttributes(["name"]), [
@@ -490,7 +654,12 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedObjectBody)
+      .send({
+        data: {
+          attributes: { name: "Marcelo Junior", gender: "male" },
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        }
+      })
       .expect(200);
 
     assert.equal(requestService.inputAttribute("name"), "Marcelo Junior");
@@ -508,7 +677,11 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(deserializedObjectBody)
+      .send({
+        name: "Marcelo Junior",
+        gender: "male",
+        meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+      })
       .expect(200);
 
     assert.equal(requestService.inputAttribute("name"), "Marcelo Junior");
@@ -523,7 +696,18 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedArrayBody)
+      .send({
+        data: [
+          {
+            attributes: { name: "Marcelo Junior", gender: "male" },
+            meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+          },
+          {
+            attributes: { name: "Suellen Siqueira", gender: "female" },
+            meta: { profile: null, username: "unknown" }
+          }
+        ]
+      })
       .expect(200);
 
     assert.deepEqual(requestService.inputAttribute("name"), [
@@ -544,7 +728,18 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(deserializedArrayBody)
+      .send([
+        {
+          name: "Marcelo Junior",
+          gender: "male",
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        },
+        {
+          name: "Suellen Siqueira",
+          gender: "female",
+          meta: { profile: null, username: "unknown" }
+        }
+      ])
       .expect(200);
 
     assert.deepEqual(requestService.inputAttribute("name"), [
@@ -562,7 +757,12 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedObjectBody)
+      .send({
+        data: {
+          attributes: { name: "Marcelo Junior", gender: "male" },
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        }
+      })
       .expect(200);
 
     assert.equal(requestService.inputMeta("profile"), "github.com/marceloadsj");
@@ -580,7 +780,11 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(deserializedObjectBody)
+      .send({
+        name: "Marcelo Junior",
+        gender: "male",
+        meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+      })
       .expect(200);
 
     assert.equal(requestService.inputMeta("profile"), "github.com/marceloadsj");
@@ -595,7 +799,18 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(serializedArrayBody)
+      .send({
+        data: [
+          {
+            attributes: { name: "Marcelo Junior", gender: "male" },
+            meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+          },
+          {
+            attributes: { name: "Suellen Siqueira", gender: "female" },
+            meta: { profile: null, username: "unknown" }
+          }
+        ]
+      })
       .expect(200);
 
     assert.deepEqual(requestService.inputMeta("profile"), [
@@ -616,7 +831,18 @@ test.group("RequestService", () => {
 
     await supertest(server)
       .post("/")
-      .send(deserializedArrayBody)
+      .send([
+        {
+          name: "Marcelo Junior",
+          gender: "male",
+          meta: { profile: "github.com/marceloadsj", username: "marceloadsj" }
+        },
+        {
+          name: "Suellen Siqueira",
+          gender: "female",
+          meta: { profile: null, username: "unknown" }
+        }
+      ])
       .expect(200);
 
     assert.deepEqual(requestService.inputMeta("profile"), [
