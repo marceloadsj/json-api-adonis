@@ -1,13 +1,16 @@
 const { ServiceProvider } = require("@adonisjs/fold");
 
-const MissingConfigFileException = require("./src/exceptions/MissingConfigFileException");
-const WrongConfigException = require("./src/exceptions/WrongConfigException");
+const MissingConfigFileException = require("../src/exceptions/MissingConfigFileException");
+const WrongConfigException = require("../src/exceptions/WrongConfigException");
 const JsonApiService = require("../src/services/JsonApiService");
 const RequestService = require("../src/services/RequestService");
 const ContentNegotiationMiddleware = require("../src/middlewares/ContentNegotiationMiddleware");
 
 const defaultConfig = {
-  deserializeBody: true
+  deserializeBody: true,
+  getErrorIdFromName: true,
+  getErrorCodeFromName: true,
+  getErrorDetailFromMessage: true
 };
 
 class JsonApiProvider extends ServiceProvider {
@@ -32,7 +35,7 @@ class JsonApiProvider extends ServiceProvider {
   }
 
   _getConfig(app) {
-    const Env = app.use("Adonis/Src/Logger");
+    const Env = app.use("Adonis/Src/Env");
     const Config = app.use("Adonis/Src/Config");
 
     if (!this.config) {
