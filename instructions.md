@@ -69,11 +69,14 @@ Mostly options are based on the [json-api-serializer](https://www.npmjs.com/pack
 
 The specific options are:
 
-| Config          | Description                                                 | Default |
-| --------------- | ----------------------------------------------------------- | ------- |
-| deserializeBody | Deserialize request body when doing the content negotiation | true    |
+| Config               | Description                                                                             | Default |
+| -------------------- | --------------------------------------------------------------------------------------- | ------- |
+| deserializeBody      | Deserialize request body when doing the content negotiation                             | true    |
+| getErrorIdFromName   | Generate error id from name when using serializeException                               | true    |
+| getErrorCodeFromName | Generate code from name when using serializeException, this is always UPPER_SNAKE_CASED | true    |
+| deserializeBody      | Use message as detail field in error when using serializeException                      | true    |
 
-Examples:
+Some examples:
 
 **deserializeBody - get some body information using request.input**:
 
@@ -99,6 +102,57 @@ You can import and use the JsonApiService with:
 const JsonApiService = use('json-api-adonis/services/JsonApiService')
 // or with alias
 const JsonApiService = use('JsonApiService')
+```
+
+- **getTypeFromModel(lucidModelInstance):string** : pass a lucid model instance and get the type string;
+- **serializeException(exception):object**: pass an error object to get the json api version of it;
+- **serializeExceptions(exception):object**: pass an array of error objects to get the json api version of it;
+
+_Please, just use the next functions if you are not using the JsonApiSerializer in the model, otherwise use model.toJSON()!_
+
+- **serializeModel(lucidModelInstance):object** : pass a lucid model instance and get the serialized version;
+- **serializeModels(lucidModelInstances):object** : pass an array of **same** lucid models instances and get the serialized version;
+- **serializeModels(lucidModelInstances):object** : pass an array of **different** lucid models instances and get the serialized version;
+
+### Tip about Exceptions:
+
+You can use the **serializeException(s)** function(s) in your [Global Handler](https://adonisjs.com/docs/4.1/exceptions#_wildcard_handler) to parse all errors using the jsonapi specification.
+Then, your [custom exceptions](https://adonisjs.com/docs/4.1/exceptions#_custom_exceptions) can have different methods to match the specification like:
+
+```
+class CustomException extends LogicalException {
+  getId() {
+    return "MyErrorId"; // take a look at getErrorIdFromName config too
+  }
+
+  getLinks() {
+    return { about: "https://example.com/helpcenter/errors" };
+  }
+
+  getStatus() {
+    return 404; // you need to grab the status and send like response.status(error.status).send(...)
+  }
+
+  getCode() {
+    return "MY_ERROR_CODE"; // take a look at getErrorCodeFromName config too
+  }
+
+  getTitle() {
+    return "There's an error with the request";
+  }
+
+  getDetail() {
+    return "This is the description of the error"; // take a look at getErrorDetailFromMessage config too
+  }
+
+  getSource() {
+    return { /* my source props */ };
+  }
+
+  getMeta() {
+    return { /* my meta props */ };
+  }
+}
 ```
 
 **RequestService**

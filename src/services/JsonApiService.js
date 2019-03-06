@@ -54,20 +54,23 @@ class JsonApiService {
   serializeModel(model) {
     const type = this.getTypeFromModel(model);
 
-    return this.jsonApiSerializer.serialize(type, model);
+    return this.jsonApiSerializer.serialize(
+      type,
+      model.toJSON ? model.toJSON() : model
+    );
   }
 
   serializeModels(models) {
     return this.jsonApiSerializer.serialize(
       { type: model => this.getTypeFromModel(model) },
-      models
+      models.toJSON ? models.toJSON() : models
     );
   }
 
   serializeMixedModels(models) {
     return this.jsonApiSerializer.serializeMixedData(
       { type: model => this.getTypeFromModel(model) },
-      models
+      models.toJSON ? models.toJSON() : models
     );
   }
 
