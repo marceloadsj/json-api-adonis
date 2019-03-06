@@ -8,23 +8,23 @@ class LucidSerializer extends Vanilla {
   constructor(rows, pages, isOne) {
     super(rows, pages, isOne);
 
-    this._getRowJSON.bind(this);
+    this._getRowJSON = this._getRowJSON.bind(this);
   }
 
   toJSON() {
     if (this.isOne) {
       const type = JsonApiService.getTypeFromModel(this.rows);
 
-      const data = this._getRowJSON(this.rows);
+      const model = this._getRowJSON(this.rows);
 
-      return JsonApiService.serialize(type, data);
+      return JsonApiService.serialize(type, model);
     }
 
-    const type = JsonApi.getTypeFromModel(this.rows[0]);
+    const type = JsonApiService.getTypeFromModel(this.rows[0]);
 
-    const data = this.rows.map(this._getRowJSON);
+    const models = this.rows.map(this._getRowJSON);
 
-    return JsonApi.serialize(type, data);
+    return JsonApiService.serialize(type, models);
   }
 }
 
