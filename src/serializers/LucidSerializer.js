@@ -13,11 +13,13 @@ class LucidSerializer extends Vanilla {
 
   toJSON() {
     if (this.isOne) {
+      const jsonModel = this._getRowJSON(this.rows);
+
+      if (this.rows.$parent) return jsonModel;
+
       const type = JsonApiService.getTypeFromModel(this.rows);
 
-      const model = this._getRowJSON(this.rows);
-
-      return JsonApiService.serialize(type, model);
+      return JsonApiService.serialize(type, jsonModel);
     }
 
     const type = JsonApiService.getTypeFromModel(this.rows[0]);
