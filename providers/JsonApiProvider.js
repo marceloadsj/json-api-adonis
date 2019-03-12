@@ -1,5 +1,6 @@
 const { ServiceProvider } = require("@adonisjs/fold");
 
+const MissingConfigTypesException = require("../src/exceptions/MissingConfigTypesException");
 const MissingConfigFileException = require("../src/exceptions/MissingConfigFileException");
 const WrongConfigException = require("../src/exceptions/WrongConfigException");
 const JsonApiService = require("../src/services/JsonApiService");
@@ -48,7 +49,9 @@ class JsonApiProvider extends ServiceProvider {
           throw WrongConfigException.invoke("options");
         }
 
-        if (config.types && typeof config.types !== "object") {
+        if (!config.types) {
+          throw MissingConfigTypesException.invoke();
+        } else if (typeof config.types !== "object") {
           throw WrongConfigException.invoke("types");
         }
       }
