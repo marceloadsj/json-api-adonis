@@ -132,6 +132,112 @@ class JsonApiService {
 
     return this.jsonApiSerializer.serializeError(exceptions);
   }
+
+  _injectAndGetSelect(query, { fields, types, type }) {
+    if (fields) {
+      return Object.keys(fields).reduce((includeFields, key) => {
+        const config = types[key];
+
+        if (config) {
+          let id = "id";
+          if (config.options && config.options.id) id = config.options.id;
+
+          let parsedFields = `${id},${fields[key]}`
+            .split(",")
+            .map(field => field.trim())
+            .filter(field => field);
+
+          if (key === type) {
+            if (config.options && config.options.relationships) {
+              parsedFields = parsedFields.concat(
+                Object.keys(config.options.relationships).map(key => {
+                  const relationship = config.options.relationships[key];
+                  return relationship.alternativeKey || key;
+                })
+              );
+            }
+
+            query.select(parsedFields);
+          } else {
+            includeFields[key] = parsedFields;
+          }
+        }
+
+        return includeFields;
+      }, {});
+    }
+  }
+
+  _injectWith(query, { model, includeFields, hasSelect, include, config }) {
+    if (include) {
+      include.split(",").forEach(include => {
+        const relationship = model[include]();
+
+        if (hasSelect && relationship.constructor.name === "BelongsTo") {
+          query.select(relationship.primaryKey);
+        }
+
+        let key;
+        if (
+          config &&
+          config.options &&
+          config.options.relationships &&
+          config.options.relationships[include]
+        ) {
+          key = config.options.relationships[include].type;
+        }
+
+        if (key && includeFields && includeFields[key]) {
+          query.with(include, query => query.select(includeFields[key]));
+        } else {
+          query.with(include);
+        }
+      });
+    }
+  }
+
+  _injectSort(query, { sort }) {
+    if (sort) {
+      sort.split(",").forEach(sort => {
+        if (sort.startsWith("-")) {
+          query.orderBy(sort.replace("-", ""), "desc");
+        } else {
+          query.orderBy(sort, "asc");
+        }
+      });
+    }
+  }
+
+  query(Model, { fields, include, sort }) {
+    const model = new Model();
+
+    const type = this.getTypeFromModel(model);
+    const { types } = this.config;
+
+    const query = Model.query();
+
+    const includeFields = this._injectAndGetSelect(query, {
+      fields,
+      types,
+      type
+    });
+
+    const hasSelect = Boolean(fields && fields[type]);
+
+    const config = types[type];
+
+    this._injectWith(query, {
+      model,
+      includeFields,
+      hasSelect,
+      include,
+      config
+    });
+
+    this._injectSort(query, { sort });
+
+    return query;
+  }
 }
 
 module.exports = JsonApiService;
