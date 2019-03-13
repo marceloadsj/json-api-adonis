@@ -5,8 +5,7 @@ const JsonApiSerializer = require("json-api-serializer");
 const TypeNotFoundException = require("../exceptions/TypeNotFoundException");
 
 class JsonApiService {
-  constructor({ config, Logger }) {
-    this.Logger = Logger;
+  constructor({ config }) {
     this.config = config;
 
     this.jsonApiSerializer = new JsonApiSerializer(this.config.options);
@@ -139,24 +138,17 @@ class JsonApiService {
         const config = types[key];
 
         if (config) {
-          let id = "id";
-          if (config.options && config.options.id) id = config.options.id;
-
-          let parsedFields = `${id},${fields[key]}`
+          const parsedFields = fields[key]
             .split(",")
             .map(field => field.trim())
             .filter(field => field);
 
-          if (key === type) {
-            if (config.options && config.options.relationships) {
-              parsedFields = parsedFields.concat(
-                Object.keys(config.options.relationships).map(key => {
-                  const relationship = config.options.relationships[key];
-                  return relationship.alternativeKey || key;
-                })
-              );
-            }
+          let id = "id";
+          if (config.options && config.options.id) id = config.options.id;
 
+          if (!parsedFields.includes(id)) parsedFields.push(id);
+
+          if (key === type) {
             query.select(parsedFields);
           } else {
             includeFields[key] = parsedFields;
