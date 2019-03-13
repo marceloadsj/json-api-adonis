@@ -64,11 +64,8 @@ class JsonApiProvider extends ServiceProvider {
 
   _registerJsonApiService() {
     this.app.singleton("json-api-adonis/services/JsonApiService", () => {
-      const Logger = this.app.use("Adonis/Src/Logger");
-
       const config = this._getConfig(this.app);
-
-      return new JsonApiService({ config, Logger });
+      return new JsonApiService({ config });
     });
 
     this.app.alias("json-api-adonis/services/JsonApiService", "JsonApiService");
