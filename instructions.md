@@ -107,6 +107,7 @@ const JsonApiService = use('JsonApiService')
 - **getTypeFromModel(lucidModelInstance):string** : pass a lucid model instance and get the type string;
 - **serializeException(exception):object**: pass an error object to get the json api version of it;
 - **serializeExceptions(exception):object**: pass an array of error objects to get the json api version of it;
+- **query(Model, request.get()):query**: pass down the Model and the request query params and get a query to fetch the data;
 
 _Please, just use the next functions if you are not using the JsonApiSerializer in the model, otherwise use model.toJSON()!_
 
