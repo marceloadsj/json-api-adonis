@@ -6,8 +6,6 @@ Wrapper between [json-api-serializer](https://www.npmjs.com/package/json-api-ser
 [![Build Status](https://travis-ci.org/marceloadsj/json-api-adonis.svg?branch=master)](https://travis-ci.org/marceloadsj/json-api-adonis)
 [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
-### The package is on pre-release, some API changes can happen!
-
 ---
 
 ## How to Use
