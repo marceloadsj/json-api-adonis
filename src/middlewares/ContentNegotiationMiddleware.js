@@ -12,10 +12,12 @@ class ContentNegotiationMiddleware {
   }
 
   async handle({ request, response }, next) {
-    const requestContentType = request.header("Content-Type").trim();
+    if (request.hasBody()) {
+      const requestContentType = request.header("Content-Type");
 
-    if (requestContentType !== contentType) {
-      throw UnsupportedMediaTypeException.invoke(contentType);
+      if (!requestContentType || requestContentType !== contentType) {
+        throw UnsupportedMediaTypeException.invoke(contentType);
+      }
     }
 
     const accept = request.header("Accept");
@@ -33,7 +35,7 @@ class ContentNegotiationMiddleware {
       }
     }
 
-    if (request.hasBody() && this.config.deserializeBody) {
+    if (this.config.deserializeBody && request.hasBody()) {
       const body = request.all();
 
       if (body) {
