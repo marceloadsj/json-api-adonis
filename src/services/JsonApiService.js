@@ -87,7 +87,7 @@ class JsonApiService {
     }
 
     if (typeof error.getStatus === "function") {
-      exception.status = error.getStatus();
+      exception.status = String(error.getStatus());
     }
 
     if (typeof error.getCode === "function") {
