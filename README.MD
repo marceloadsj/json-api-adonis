@@ -1,5 +1,8 @@
 # 🐙 [Json Api Adonis](https://www.npmjs.com/package/json-api-adonis)
 
+## Deprecated with the launch of adonis v5
+[https://adonisjs.com/](https://adonisjs.com/)
+
 Wrapper between [json-api-serializer](https://www.npmjs.com/package/json-api-serializer) and [Adonis](https://adonisjs.com/)!
 
 [![NPM](https://img.shields.io/npm/v/json-api-adonis.svg)](https://www.npmjs.com/package/json-api-adonis)
